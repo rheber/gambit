@@ -4,7 +4,10 @@
     export const params = {};
 
     const loadBoard = () => {
-	var board1 = Chessboard('board1', 'start');
+	var board1 = Chessboard('board1', {
+	    position: 'start',
+	    draggable: true,
+	});
     };
 </script>
 
