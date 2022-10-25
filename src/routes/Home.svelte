@@ -7,12 +7,36 @@
 
     const game = new Chess();
     let pgn = '';
-    let moves = game.moves();
+
+
+    const getFenForMove = (currentGame, move) => {
+	const hypotheticalGame = new Chess(currentGame.fen());
+	hypotheticalGame.move(move);
+	return hypotheticalGame.fen();
+    };
+
+    const getDataFromLichess = async (fen) => {
+	const response = await fetch(`https://explorer.lichess.ovh/masters?fen=${fen}`);
+	const data = await response.json();
+	return data;
+    };
+
+    const mapMove = (move) => {
+	const fen = getFenForMove(game, move);
+	getDataFromLichess(fen).then(console.log);
+	return {
+	    move,
+	    fen,
+	};
+    };
+
+    let moves = game.moves().map(mapMove);
 
     const update = () => {
 	pgn = game.pgn();
-	moves = game.moves();
+	moves = game.moves().map(mapMove);
     };
+
 </script>
 
 <h1>Gambit</h1>
@@ -21,8 +45,8 @@
     <Board game={game} update={update} />
     <div>
 	<em>Legal Moves ({moves.length} total)</em>
-	{#each moves as move}
-	    <div>{move}</div>
+	{#each moves as moveObject}
+	    <div>{moveObject.move}</div>
 	{/each}
     </div>
     <div>{pgn}</div>
