@@ -2,12 +2,12 @@
     import { Chess } from 'chess.js'
 
     import Board from "../components/Board.svelte";
+    import LegalMoves from "../components/LegalMoves.svelte";
 
     export const params = {};
 
     const game = new Chess();
     let pgn = '';
-
 
     const getFenForMove = (currentGame, move) => {
 	const hypotheticalGame = new Chess(currentGame.fen());
@@ -23,10 +23,10 @@
 
     const mapMove = (move) => {
 	const fen = getFenForMove(game, move);
-	getDataFromLichess(fen).then(console.log);
 	return {
 	    move,
 	    fen,
+	    lichessData: getDataFromLichess(fen),
 	};
     };
 
@@ -43,12 +43,7 @@
 
 <div class="root">
     <Board game={game} update={update} />
-    <div>
-	<em>Legal Moves ({moves.length} total)</em>
-	{#each moves as moveObject}
-	    <div>{moveObject.move}</div>
-	{/each}
-    </div>
+    <LegalMoves moves={moves} />
     <div>{pgn}</div>
 </div>
 
