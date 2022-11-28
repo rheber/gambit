@@ -10,6 +10,10 @@
   const totalGamesCmp = (rowA, rowB) => {
     return totalGames(rowA) > totalGames(rowB) ? -1 : 1;
   };
+
+  const percentResult = (row, amtGames) => {
+    return `${Math.round(100 * amtGames / totalGames(row))}%`;
+  };
 </script>
 
 <div class="root">
@@ -29,9 +33,9 @@
 	    <td class="right">{row.move}</td>
 	      <th class="left">{row.lichessData.opening?.name || ""}</th>
 	      <td class="right">{totalGames(row)}</td>
-	      <td class="right">{row.lichessData.white}</td>
-	      <td class="right">{row.lichessData.draws}</td>
-	      <td class="right">{row.lichessData.black}</td>
+	      <td class="right">{percentResult(row, row.lichessData.white)}</td>
+	      <td class="right">{percentResult(row, row.lichessData.draws)}</td>
+	      <td class="right">{percentResult(row, row.lichessData.black)}</td>
 	</tr>
       {/each}
     {/await}
