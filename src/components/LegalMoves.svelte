@@ -1,5 +1,15 @@
 <script>
   export let moves;
+
+  const totalGames = (row) => {
+    return (row.lichessData.white || 0) +
+      (row.lichessData.draws || 0) +
+      (row.lichessData.black || 0);
+  };
+
+  const totalGamesCmp = (rowA, rowB) => {
+    return totalGames(rowA) > totalGames(rowB) ? -1 : 1;
+  };
 </script>
 
 <div class="root">
@@ -13,24 +23,18 @@
       <th>Draw</th>
       <th>Black</th>
     </tr>
-    {#each moves as moveObject}
-      <tr class="move">
-	  <td class="right">{moveObject.move}</td>
-	  {#await moveObject.lichessData then lichessData}
-	    <th class="left">{lichessData.opening?.name || ""}</th>
-	    <td class="right">
-	      {
-		(lichessData.white || 0) +
-		(lichessData.draws || 0) +
-		(lichessData.black || 0)
-	      }
-	    </td>
-	    <td class="right">{lichessData.white}</td>
-	    <td class="right">{lichessData.draws}</td>
-	    <td class="right">{lichessData.black}</td>
-	  {/await}
-      </tr>
-    {/each}
+    {#await moves then rows}
+      {#each rows.sort(totalGamesCmp) as row}
+	<tr class="move">
+	    <td class="right">{row.move}</td>
+	      <th class="left">{row.lichessData.opening?.name || ""}</th>
+	      <td class="right">{totalGames(row)}</td>
+	      <td class="right">{row.lichessData.white}</td>
+	      <td class="right">{row.lichessData.draws}</td>
+	      <td class="right">{row.lichessData.black}</td>
+	</tr>
+      {/each}
+    {/await}
   </table>
 </div>
 

@@ -21,20 +21,21 @@
 	return data;
     };
 
-    const mapMove = (move) => {
+    const mapMove = async (move) => {
 	const fen = getFenForMove(game, move);
+	const lichessData = await getDataFromLichess(fen);
 	return {
 	    move,
 	    fen,
-	    lichessData: getDataFromLichess(fen),
+	    lichessData,
 	};
     };
 
-    let moves = game.moves().map(mapMove);
+    let moves = Promise.all(game.moves().map(mapMove));
 
     const update = () => {
 	pgn = game.pgn();
-	moves = game.moves().map(mapMove);
+	moves = Promise.all(game.moves().map(mapMove));
     };
 
 </script>
