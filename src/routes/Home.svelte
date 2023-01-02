@@ -1,6 +1,5 @@
 <script>
     import { Chess } from 'chess.js'
-
     import Board from "../components/Board.svelte";
     import LegalMoves from "../components/LegalMoves.svelte";
 
@@ -38,6 +37,7 @@
 	moves = Promise.all(game.moves().map(mapMove));
     };
 
+    const worker = new Worker("worker.js");
 </script>
 
 <h1>Gambit</h1>
